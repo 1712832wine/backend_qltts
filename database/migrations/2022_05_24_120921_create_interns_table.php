@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('interns', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('phone',11);
+            $table->string('phone');
             $table->string('major')->nullable();
             $table->string('school_year')->nullable();
             $table->string('cv_file')->nullable();

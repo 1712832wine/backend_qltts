@@ -13,9 +13,11 @@ class InternController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // [GET] /interns
     public function index()
     {
-        return Intern::all();
+        $response = array('response' => '', 'success'=>false);
+        return Intern::paginate(5);
     }
 
     /**
@@ -24,9 +26,30 @@ class InternController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // [POST] /interns
     public function store(Request $request)
     {
-        return Intern::create($request->all());
+        $validator = $request->validate([
+            'name' => 'required',
+            'phone' => 'required|unique:interns|min:9|max:15',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'result' => 'required'
+        ]);
+        //process the request
+        $temp = $request->all();
+        $intern =  new Intern;
+        $intern->name = $request->name;
+        $intern->phone = $request->phone;
+        $intern->major = $request->major;
+        $intern->school_year = $request->school_year;
+        $intern->start_date = $request->start_date;
+        $intern->end_date = $request->end_date;
+        $intern->result = $request->result;
+        $intern->save();
+        $response['response'] = 'Created Success';
+    
+        return $response;
     }
 
     /**
@@ -35,6 +58,7 @@ class InternController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // [GET] /interns/:id
     public function show($id)
     {
         return Intern::findOrFail($id);
@@ -47,9 +71,27 @@ class InternController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // [PUT/PATCH] /interns/:id
     public function update(Request $request, $id)
     {
-        $product->update($request->all());
+        $validator = $request->validate([
+            'name' => 'required',
+            'phone' => 'required|min:9|max:15|unique:interns,phone,'.$id,
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'result' => 'required'
+        ]);
+        $intern = Intern::findOrFail($id);
+        $intern->name = $request->name;
+        $intern->phone = $request->phone;
+        $intern->major = $request->major;
+        $intern->school_year = $request->school_year;
+        $intern->start_date = $request->start_date;
+        $intern->end_date = $request->end_date;
+        $intern->result = $request->result;
+        $intern->save();
+        $response['response'] = 'Edit Success';
+        return $response;
     }
 
     /**
@@ -58,8 +100,17 @@ class InternController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // [DELETE] /interns/:id
     public function destroy($id)
     {
-        Intern->delete($id);
+        Intern::destroy($id);
     }
 }
+
+
+
+// [GET] /interns => INDEX
+// [POST] /interns => CREATE
+// [GET] /interns/:id => SHOW
+// [PUT/PATCH] /interns/:id => UPDATE
+// [DELETE] /interns/:id => DELETE
