@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Intern;
+use Illuminate\Support\Facades\Storage;
 
 class InternController extends Controller
 {
@@ -36,8 +37,7 @@ class InternController extends Controller
             'end_date' => 'required|date|after:start_date',
             'result' => 'required'
         ]);
-        //process the request
-        $temp = $request->all();
+        // process the request
         $intern =  new Intern;
         $intern->name = $request->name;
         $intern->phone = $request->phone;
@@ -46,9 +46,7 @@ class InternController extends Controller
         $intern->start_date = $request->start_date;
         $intern->end_date = $request->end_date;
         $intern->result = $request->result;
-        $intern->save();
         $response['response'] = 'Created Success';
-    
         return $response;
     }
 
