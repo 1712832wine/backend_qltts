@@ -46,6 +46,7 @@ class InternController extends Controller
         $intern->start_date = $request->start_date;
         $intern->end_date = $request->end_date;
         $intern->result = $request->result;
+        $intern->save();
         $response['response'] = 'Created Success';
         return $response;
     }
